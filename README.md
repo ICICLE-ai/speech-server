@@ -8,7 +8,7 @@ To set up the environment, follow these steps:
     ```bash
     python3.11 -m venv server
     source server/bin/activate
-    pip install -r requirements
+    pip install -r requirements.txt
     ```
 
 2. Add the following line to `server/bin/activate` to ensure that the necessary libraries are accessible:
