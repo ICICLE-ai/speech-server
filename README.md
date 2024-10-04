@@ -25,3 +25,30 @@ To set up the environment, follow these steps:
     ```
 
 Make sure to replace `/path/to/environment/` and `/path/to/java/installation/` with the actual paths to your environment and Java installation.
+
+## Files Description
+
+- `whisperx_model.py`: Contains the model definition.
+- `whisperx_handler.py`: Handles data input/output operations.
+- `archive.sh`: Used to create the `.mar` file for the model in the `model_store` folder.
+
+## Model Update Process
+
+To update the model:
+
+1. **Always archive the model first** by running:
+    
+    ```bash
+    ./archive.sh
+    ```
+
+2. After archiving, **start the server** by running:
+
+    ```bash
+    ./start_server.sh
+    ```
+
+To stop the server, run:
+
+```bash
+./stop_server.sh
