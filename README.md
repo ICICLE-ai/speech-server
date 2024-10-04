@@ -17,7 +17,7 @@ To set up the environment, follow these steps:
     export LD_LIBRARY_PATH=/path/to/environment/server/lib64/python3.11/site-packages/nvidia/cublas/lib:/path/to/environment/server/lib64/python3.11/site-packages/nvidia/cudnn/lib
     ```
 
-3. If Java 11.0 is not installed, set up the Java environment variables:
+3. If Java 11.0 is not installed, set up the Java environment variables. Add the following to `server/bin/activate`:
 
     ```bash
     export JAVA_HOME=/path/to/java/installation/jdk-11.0.16.1+1
