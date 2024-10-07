@@ -11,7 +11,6 @@ class whisperXModel(nn.Module):
         txt = self.model.transcribe(x, batch_size=1)
         return txt
 
-
 def model_fn(model_dir):
     model = whisperXModel()
     return model
