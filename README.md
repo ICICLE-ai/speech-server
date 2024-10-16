@@ -31,6 +31,7 @@ Make sure to replace `/path/to/environment/` and `/path/to/java/installation/` w
 - `whisperx_model.py`: Contains the model definition.
 - `whisperx_handler.py`: Handles data input/output operations.
 - `archive.sh`: Used to create the `.mar` file for the model in the `model_store` folder.
+- `config*.json`: Configuration for corresponding models
 
 ## Model Update Process
 
