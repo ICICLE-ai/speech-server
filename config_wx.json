@@ -1,5 +1,5 @@
 {
-"size":"large-v3",
-"device":"cuda",
-"compute":"float16"
+"size":"small",
+"device":"cpu",
+"compute":"int8"
 }

@@ -1,4 +1,5 @@
 # speech-server
+
 ## Installation
 
 To set up the environment, follow these steps:
@@ -11,10 +12,22 @@ To set up the environment, follow these steps:
     pip install -r requirements.txt
     ```
 
-2. Add the following line to `server/bin/activate` to ensure that the necessary libraries are accessible:
+    - If you are using the Nemo-based ASR model, use the following requirements file:
+
+    ```bash
+    pip install -r requirements_wx_nemo.txt
+    ```
+
+2. Add the following lines to `server/bin/activate` to ensure that the necessary libraries are accessible:
 
     ```bash
     export LD_LIBRARY_PATH=/path/to/environment/server/lib64/python3.11/site-packages/nvidia/cublas/lib:/path/to/environment/server/lib64/python3.11/site-packages/nvidia/cudnn/lib
+    ```
+
+    If you are using the Nemo version, also add the following:
+
+    ```bash
+    export CPATH=$HOME/python-dev/include:$CPATH
     ```
 
 3. If Java 11.0 is not installed, set up the Java environment variables. Add the following to `server/bin/activate`:
@@ -31,14 +44,14 @@ Make sure to replace `/path/to/environment/` and `/path/to/java/installation/` w
 - `whisperx_model.py`: Contains the model definition.
 - `whisperx_handler.py`: Handles data input/output operations.
 - `archive.sh`: Used to create the `.mar` file for the model in the `model_store` folder.
-- `config*.json`: Configuration for corresponding models
+- `config*.json`: Configuration for corresponding models.
 
 ## Model Update Process
 
 To update the model:
 
 1. **Always archive the model first** by running:
-    
+
     ```bash
     ./archive.sh
     ```
@@ -53,3 +66,4 @@ To stop the server, run:
 
 ```bash
 ./stop_server.sh
+

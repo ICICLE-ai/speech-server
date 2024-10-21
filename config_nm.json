@@ -1,0 +1,4 @@
+{
+"device":"cuda",
+"beam_size":1
+}

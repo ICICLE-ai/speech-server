@@ -14,7 +14,7 @@ class whisperXModel(nn.Module):
         asr_results = self.model.transcribe(x, batch_size=1)
         aln_results = whisperx.align(asr_results["segments"], self.align, self.metadata, x, self.device, return_char_alignments=False)
 
-        text = aln_results['segments'][0]['text'].strip()
+        text = asr_results['segments'][0]['text'].strip()
         alns = aln_results['word_segments']
         return text, alns
 
