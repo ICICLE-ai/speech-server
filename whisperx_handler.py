@@ -27,15 +27,6 @@ class CustomASRHandler(BaseHandler):
         self.initialized = True
 
     def preprocess(self, data):
-        #if 'data' in data[0]:
-        #    temp_audio_path = "/tmp/temp_audio_file.wav"
-        #    with open(temp_audio_path, 'wb') as f:
-        #        f.write(data[0].get("data"))
-        #    return whisperx.load_audio(temp_audio_path)
-
-        #audio_file = data[0].get("body").strip()
-        #return whisperx.load_audio(audio_file)
-
         if 'data' in data[0]:
             temp_audio_path = "/tmp/temp_audio_file.wav"
             with open(temp_audio_path, 'wb') as f:
@@ -43,33 +34,84 @@ class CustomASRHandler(BaseHandler):
             return whisperx.load_audio(temp_audio_path)
 
         elif 'audio' in data[0]:
-            # Extract the audio bytearray from the HTTP request
             audio_data = data[0].get('audio')
-
             if not audio_data:
                 raise ValueError("No audio data received")
 
-            # Convert the byte array into a BytesIO stream
-            audio_stream = io.BytesIO(audio_data)
-
-            # Use pydub to convert Ogg/Opus to WAV
+            # Write the audio data directly to a temporary file
+            temp_audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")  # Adjust suffix as needed
             try:
-                # Load Ogg/Opus audio using pydub
-                audio = AudioSegment.from_file(audio_stream, format="ogg")
+                temp_audio_file.write(audio_data)
+                print(f"Temporary file created: {temp_audio_file.name}")
+                temp_audio_file.flush()
 
-                # Save the audio temporarily as a WAV file
-                temp_wav_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-                audio.export(temp_wav_file.name, format="wav")
-                temp_wav_file.close()  # Close the file so it can be read by the model
+                # Load the audio directly from MP4 or Ogg format
+                loaded_audio = whisperx.load_audio(temp_audio_file.name)
 
-                print(f'NAME OF FILE : {temp_wav_file.name}')
-                return whisperx.load_audio(temp_wav_file.name)
+            except Exception as load_error:
+                raise ValueError(f"Failed to load audio file: {load_error}")
 
-            except Exception as e:
-                raise ValueError(f"Failed to process audio stream: {e}")
+            finally:
+                temp_audio_file.close()
+                os.remove(temp_audio_file.name)
+                print(f"Temporary file deleted: {temp_audio_file.name}")
 
-        audio_file = data[0].get("body").strip()
-        return whisperx.load_audio(audio_file)
+            return loaded_audio
+
+        elif 'body' in data[0]:
+            audio_file = data[0].get("body").strip()
+            return whisperx.load_audio(audio_file)
+        else:
+            raise ValueError("No valid audio field in data.")
+
+    #def preprocess(self, data):
+    #    #if 'data' in data[0]:
+    #    #    temp_audio_path = "/tmp/temp_audio_file.wav"
+    #    #    with open(temp_audio_path, 'wb') as f:
+    #    #        f.write(data[0].get("data"))
+    #    #    return whisperx.load_audio(temp_audio_path)
+
+    #    #audio_file = data[0].get("body").strip()
+    #    #return whisperx.load_audio(audio_file)
+
+    #    if 'data' in data[0]:
+    #        temp_audio_path = "/tmp/temp_audio_file.wav"
+    #        with open(temp_audio_path, 'wb') as f:
+    #            f.write(data[0].get("data"))
+    #        return whisperx.load_audio(temp_audio_path)
+
+    #    elif 'audio' in data[0]:
+    #        # Extract the audio bytearray from the HTTP request
+    #        audio_data = data[0].get('audio')
+
+    #        if not audio_data:
+    #            raise ValueError("No audio data received")
+
+    #        # Convert the byte array into a BytesIO stream
+    #        audio_stream = io.BytesIO(audio_data)
+
+    #        # Use pydub to convert Ogg/Opus to WAV
+    #        try:
+    #            # Load Ogg/Opus audio using pydub
+    #            #audio = AudioSegment.from_file(audio_stream, format="ogg")
+    #            audio = AudioSegment.from_file(audio_stream, format="mp4")
+
+    #            # Save the audio temporarily as a WAV file
+    #            temp_wav_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+    #            audio.export(temp_wav_file.name, format="wav")
+    #            temp_wav_file.close()  # Close the file so it can be read by the model
+
+    #            print(f'NAME OF FILE : {temp_wav_file.name}')
+    #            audio = whisperx.load_audio(temp_wav_file.name)
+    #            #os.remove(temp_wav_file.name)
+    #            #print(f"Temporary file deleted: {temp_wav_file.name}")
+    #            return audio
+
+    #        except Exception as e:
+    #            raise ValueError(f"Failed to process audio stream: {e}")
+
+    #    audio_file = data[0].get("body").strip()
+    #    return whisperx.load_audio(audio_file)
 
     def inference(self, data):
         print('TRANSCRIBING NOW')
