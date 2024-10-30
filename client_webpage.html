@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Recorder and Transcription</title>
+</head>
+<body>
+    <h1>Record Audio and Get Transcription</h1>
+    <button id="recordButton">Start Recording</button>
+    <button id="stopButton" disabled>Stop Recording</button>
+    
+    <h2>Recorded Audio</h2>
+    <audio id="audioPlayback" controls></audio>
+    
+    <h2>Transcription Result:</h2>
+    <pre id="transcriptionResult"></pre>
+
+    <h2>Alignment:</h2>
+    <pre id="alignmentResult"></pre>
+
+    <script>
+        const recordButton = document.getElementById('recordButton');
+        const stopButton = document.getElementById('stopButton');
+        const audioPlayback = document.getElementById('audioPlayback');
+        const transcriptionResult = document.getElementById('transcriptionResult');
+        const alignmentResult = document.getElementById('alignmentResult');
+        let mediaRecorder;
+        let audioBlob;
+
+        // Event listener for start recording
+        recordButton.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = function (event) {
+                    if (event.data.size > 0) {
+                        audioBlob = event.data;
+                        const audioURL = URL.createObjectURL(audioBlob);
+                        audioPlayback.src = audioURL;
+                        
+                        // Send the recorded audio to the server
+                        sendAudioToServer(audioBlob);
+                    }
+                };
+
+                mediaRecorder.start();
+                recordButton.disabled = true;
+                stopButton.disabled = false;
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+            }
+        });
+
+        // Event listener for stop recording
+        stopButton.addEventListener('click', () => {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                recordButton.disabled = false;
+                stopButton.disabled = true;
+            }
+        });
+
+        // Function to send audio data to server
+        function sendAudioToServer(blob) {
+            const formData = new FormData();
+            formData.append('audio', blob, 'recorded_audio.wav');
+
+            fetch('http://localhost:8080/predictions/whisperx_asr', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Parsed response:", data);  // Log the response for debugging
+
+                // Access the transcription and alignment from data.body
+                // const transcription = data.body.transcription;
+                const transcription = data.transcription;
+                transcriptionResult.textContent = transcription;
+
+                // const alignment = data.body.alignment;
+                const alignment = data.alignment;
+                let alignmentText = '';
+                alignment.forEach(item => {
+                    alignmentText += `${item.word}: start ${item.start}, end ${item.end}, score ${item.score}\n`;
+                });
+                alignmentResult.textContent = alignmentText;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

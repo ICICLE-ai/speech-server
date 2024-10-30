@@ -45,6 +45,7 @@ Make sure to replace `/path/to/environment/` and `/path/to/java/installation/` w
 - `whisperx_handler.py`: Handles data input/output operations.
 - `archive.sh`: Used to create the `.mar` file for the model in the `model_store` folder.
 - `config*.json`: Configuration for corresponding models.
+- `client_webpage.html`: An example of a client-side HTML file to send audio this torchserve server and getting the transcription
 
 ## Model Update Process
 
