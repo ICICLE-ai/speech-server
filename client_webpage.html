@@ -4,15 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Recorder and Transcription</title>
+    <style>
+        /* Add styles to make the transcription and alignment boxes scrollable */
+        #transcriptionResult, #alignmentResult {
+            width: 100%;
+            max-height: 300px; /* Set a maximum height */
+            overflow-y: auto;  /* Enable vertical scrolling */
+            border: 1px solid #ccc; /* Add a border for better visibility */
+            padding: 10px; /* Add some padding for readability */
+            white-space: pre-wrap; /* Preserve whitespace and wrap long lines */
+        }
+    </style>
 </head>
 <body>
     <h1>Record Audio and Get Transcription</h1>
     <button id="recordButton">Start Recording</button>
     <button id="stopButton" disabled>Stop Recording</button>
-    
+
     <h2>Recorded Audio</h2>
     <audio id="audioPlayback" controls></audio>
-    
+
     <h2>Transcription Result:</h2>
     <pre id="transcriptionResult"></pre>
 
@@ -39,7 +50,7 @@
                         audioBlob = event.data;
                         const audioURL = URL.createObjectURL(audioBlob);
                         audioPlayback.src = audioURL;
-                        
+
                         // Send the recorded audio to the server
                         sendAudioToServer(audioBlob);
                     }
@@ -76,11 +87,9 @@
                 console.log("Parsed response:", data);  // Log the response for debugging
 
                 // Access the transcription and alignment from data.body
-                // const transcription = data.body.transcription;
                 const transcription = data.transcription;
                 transcriptionResult.textContent = transcription;
 
-                // const alignment = data.body.alignment;
                 const alignment = data.alignment;
                 let alignmentText = '';
                 alignment.forEach(item => {
