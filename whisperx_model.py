@@ -1,14 +1,6 @@
 import time
-print(f'IMPORTING TORCH')
-start_time = time.time()
 import torch
-end_time = time.time()
-print(f'IMPORTING TORCH TAKES {end_time - start_time} SECONDS')
-print(f'IMPORTING WHISPER')
-start_time = time.time()
 import whisperx
-end_time = time.time()
-print(f'IMPORTING WHISPER TAKES {end_time - start_time} SECONDS')
 import torch.nn as nn
 
 class whisperXModel(nn.Module):
@@ -20,7 +12,7 @@ class whisperXModel(nn.Module):
         self.device = device
 
     def forward(self, x):
-        asr_results = self.model.transcribe(x, batch_size=1)
+        asr_results = self.model.transcribe(x, batch_size=8)
         aln_results = whisperx.align(asr_results["segments"], self.align, self.metadata, x, self.device, return_char_alignments=False)
 
         text = ' '.join([d['text'].strip() for d in asr_results['segments']])

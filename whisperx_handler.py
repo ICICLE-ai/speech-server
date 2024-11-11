@@ -39,7 +39,7 @@ class CustomASRHandler(BaseHandler):
                 raise ValueError("No audio data received")
 
             # Write the audio data directly to a temporary file
-            temp_audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")  # Adjust suffix as needed
+            temp_audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")  # Adjust suffix as needed
             try:
                 temp_audio_file.write(audio_data)
                 print(f"Temporary file created: {temp_audio_file.name}")

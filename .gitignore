@@ -1,6 +1,7 @@
 *.swp
 *.wav
 *.flac
+*.mp4
 scratch.py
 check_requests.py
 custom_asr_handler.py

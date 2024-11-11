@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -39,11 +38,19 @@
         let mediaRecorder;
         let audioBlob;
 
+        // NEW: Set a common MIME type for better compatibility
+        const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+            ? "audio/webm;codecs=opus"
+            : MediaRecorder.isTypeSupported("audio/ogg;codecs=opus")
+            ? "audio/ogg;codecs=opus"
+            : "";
+
         // Event listener for start recording
         recordButton.addEventListener('click', async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
+                // NEW: Specify the MIME type for MediaRecorder
+                mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType || undefined });
 
                 mediaRecorder.ondataavailable = function (event) {
                     if (event.data.size > 0) {
@@ -76,7 +83,9 @@
         // Function to send audio data to server
         function sendAudioToServer(blob) {
             const formData = new FormData();
-            formData.append('audio', blob, 'recorded_audio.wav');
+            // NEW: Adjusted the file extension to match the MIME type
+            const fileExtension = mimeType.includes("webm") ? "webm" : "ogg";
+            formData.append('audio', blob, `recorded_audio.${fileExtension}`);
 
             fetch('http://localhost:8080/predictions/whisperx_asr', {
                 method: 'POST',
@@ -86,7 +95,6 @@
             .then(data => {
                 console.log("Parsed response:", data);  // Log the response for debugging
 
-                // Access the transcription and alignment from data.body
                 const transcription = data.transcription;
                 transcriptionResult.textContent = transcription;
 
