@@ -36,6 +36,12 @@ To set up the environment, follow these steps:
     export JAVA_HOME=/path/to/java/installation/jdk-11.0.16.1+1
     export PATH=$JAVA_HOME/bin:$PATH
     ```
+4. If ffmpeg 7.0.2 is not installed, you may need to download it from [here](https://ffmpeg.org/download.html#releases) and build it locally. Then, set up the enivronment variables:
+    ```bash
+    export JAVA_HOME=/path/to/java/installation/jdk-11.0.16.1+1
+    export FFMPEG=/path/to/ffmpeg/installation/ffmpeg-7.0.2/build
+    export PATH=$JAVA_HOME/bin:$FFMPEG/bin:$PATH
+    ```
 
 Make sure to replace `/path/to/environment/` and `/path/to/java/installation/` with the actual paths to your environment and Java installation.
 
