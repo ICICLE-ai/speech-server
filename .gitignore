@@ -2,6 +2,12 @@
 *.wav
 *.flac
 *.mp4
+encoders.py
+models.py
+util.py
+my_model.py
+my_handler.py
+hc_ctc_all.yaml
 scratch.py
 check_requests.py
 custom_asr_handler.py
