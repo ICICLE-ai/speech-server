@@ -42,6 +42,7 @@ To set up the environment, follow these steps:
     export FFMPEG=/path/to/ffmpeg/installation/ffmpeg-7.0.2/build
     export PATH=$JAVA_HOME/bin:$FFMPEG/bin:$PATH
     ```
+   ffmpeg 7.0.2 is very important to have if we want to make API calls to this server from the Safari browser.
 
 Make sure to replace `/path/to/environment/` and `/path/to/java/installation/` with the actual paths to your environment and Java installation.
 
