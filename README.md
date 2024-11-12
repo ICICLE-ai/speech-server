@@ -54,6 +54,13 @@ Make sure to replace `/path/to/environment/` and `/path/to/java/installation/` w
 - `config*.json`: Configuration for corresponding models.
 - `client_webpage.html`: An example of a client-side HTML file to send audio this torchserve server and getting the transcription
 
+## Browser integration
+
+- The ASR models are being hosted right now on the slatelab server (need to change at some point)
+- Port forwarding needed. First run `ssh -L 8080:localhost:8080 user@cse-d01187744s.coeit.osu.edu`
+- Then run `client_webpage.html`. You will see a page like below.
+![Alt text](webpage_look.png)
+
 ## Model Update Process
 
 To update the model:
